@@ -5,13 +5,12 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Welcome</title>
+<title>Administrator</title>
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 </head>
 <body>
-    
-	<div class="container">
-		<h1>Welcome to GC Coffee</h1>
+<div class="container">
+		<h1>Administrator</h1>
 		<table class="table">
 			<tr>
 				<th>Product</th>
@@ -21,19 +20,16 @@
 			
 			<c:forEach var="i" items="${list }">
 			 <tr>
-			 	<td>${i.name }</td>
-			 	<td>${i.description }</td>
-			 	<td>${i.price }</td>
+			 	<td><input type="text" value= "${i.name }"></input></td>
+			 	<td><input type= "text" value= "${i.description }"></input></td>
+			 	<td><input type= "text" value= "${i.price }"></input></td>
 			 </tr>
 			</c:forEach>
 		</table>
-		<a href="/signup" class="btn btn-secondary">Register</a>
-		<!--  <button onclick="index/register" class="btn btn-primary">Register Here</button> -->
-     </div>		
-     
-     <div>
-     <a href="/admin">Admin</a>
-     </div>
 
+<a class="btn btn-outline-info" href="/add">Add a new Product</a>
+<br>
+<a class="btn btn-outline-info" href="/" role="button">Home</a>
+</div>
 </body>
 </html>

@@ -9,59 +9,70 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import co.grandcircus.jdbcintro.dao.UsersDao;
-import co.grandcircus.jdbcinto.entity.Users;
+import co.grandcircus.coffeeshop.dao.ProductsDao;
+import co.grandcircus.coffeeshop.dao.UsersDao;
+import co.grandcircus.coffeeshop.entity.Products;
+import co.grandcircus.coffeeshop.entity.Users;
 
 @Controller
 public class CoffeeShopController {
 	
 	@Autowired
-	private UsersDao dao;
+	 UsersDao usersDao;
+	@Autowired
+	 ProductsDao productDao;
 	
-//	@Autowired
-//	private ProductsDao dao;
 	
 	@RequestMapping("/")
-	public ModelAndView index() {
-		return new ModelAndView("redirect:/users");
+	public ModelAndView home() {
+		ModelAndView mv = new ModelAndView("index");
+		mv.addObject("list", productDao.findAll());
+		return mv;
 	}
 	
-	@RequestMapping("/users")
-	public ModelAndView list() {
-		List<Users> listofUsers = dao.findAll();
-		return new ModelAndView("list", "users", listofUsers); 
+	
+	@RequestMapping("/signup")
+	public ModelAndView register() {
+		return new ModelAndView("signup");
 	}
 	
-	@RequestMapping("/users/detail")
-	public ModelAndView detail(@RequestParam("username") String username) {
-		Users users = dao.findByusername(username);
+	@PostMapping("/signup")
+	public ModelAndView signup(Users user) {
+		ModelAndView mv = new ModelAndView("signup");
 		
-		return new ModelAndView("detail", "username",username);
+		if (!user.getName().contentEquals(null)) {
+			usersDao.create(user);
+			mv.addObject("users", user);
+		}
+		return mv;
 	}
-	
-	@RequestMapping("/users/edit")
-	public ModelAndView edit(@RequestParam("username") String username) {
-		Users users = dao.findByusername(username);
-		return new ModelAndView("edit", "username", username);
-	}
-	
-	@PostMapping("/users/edit")
-	public ModelAndView save(@RequestParam("username") String username, Users users) {
-		users.setUsername(username);
-		dao.update(users);
 		
 		
-		return new ModelAndView("redirect:/users/detail?idusername=" + username);
-	}
-	
-	@RequestMapping("/users/add")
-	public ModelAndView add() {		
-		return new ModelAndView("add");
-	}
-	
-	@PostMapping("/users/add")
-	public ModelAndView addSubmit(Users users) {
-		dao.create(users);
-		return new ModelAndView("redirect:/users");
-	}
+		@RequestMapping("/admin")
+		public ModelAndView admin() {
+			ModelAndView mv = new ModelAndView("admin");
+			mv.addObject("list", usersDao.findAll() );
+			return mv;
+		}
+		
+		@RequestMapping("/admin/add")
+		public ModelAndView add() {
+			return new ModelAndView("add");
+			
+		}
+		
+		@PostMapping("/admin/add")
+		public ModelAndView addSubmit(Products product) {
+			productDao.create(product);
+			return new ModelAndView("redirect/admin");
+		}
+		
+		@RequestMapping("/admin/delete")
+		public ModelAndView remove(@RequestParam("id") Long id) {
+			productDao.delete(id);
+			return new ModelAndView("redirect:/admin");
+		}
+		
 }
+
+	 
